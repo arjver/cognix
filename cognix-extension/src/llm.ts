@@ -13,7 +13,7 @@ interface OpenRouterResponse {
 
 export async function connectToOpenRouter(message: string): Promise<string> {
     const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-    const MODEL_NAME = 'xiaomi/mimo-v2-flash:free';
+    const MODEL_NAME = 'gpt-oss-120b';
 
     if (!process.env.LLM_API_KEY) {
         const envPath = path.join(__dirname, '..', '.env');

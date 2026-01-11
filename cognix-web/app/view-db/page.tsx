@@ -116,9 +116,74 @@ export default function ViewDBPage() {
                                     </span>
                                   )}
                                 </div>
-                                <pre className="bg-gray-900 text-green-400 p-4 rounded overflow-auto text-sm">
-                                  {JSON.stringify(doc, null, 2)}
-                                </pre>
+                                
+                                {/* Special formatting for sessions collection */}
+                                {collection.name === 'sessions' ? (
+                                  <div className="space-y-3">
+                                    <div className="bg-white p-4 rounded border border-gray-300">
+                                      <h4 className="font-semibold text-gray-700 mb-2">👤 User Info</h4>
+                                      <p className="text-sm"><strong>Name:</strong> {doc.userDetails?.fullName || 'N/A'}</p>
+                                      <p className="text-sm"><strong>Class:</strong> {doc.userDetails?.className || 'N/A'}</p>
+                                      <p className="text-sm"><strong>Timestamp:</strong> {doc.timestamp ? new Date(doc.timestamp).toLocaleString() : 'N/A'}</p>
+                                    </div>
+                                    
+                                    <div className="bg-white p-4 rounded border border-gray-300">
+                                      <h4 className="font-semibold text-gray-700 mb-2">🤖 AI Analysis</h4>
+                                      <p className="text-sm mb-2">
+                                        <strong>Human Likelihood Score:</strong>{' '}
+                                        <span className={`font-bold ${
+                                          (doc.analysis?.score || 0) >= 70 ? 'text-green-600' :
+                                          (doc.analysis?.score || 0) >= 40 ? 'text-yellow-600' :
+                                          'text-red-600'
+                                        }`}>
+                                          {doc.analysis?.score || 0}%
+                                        </span>
+                                      </p>
+                                      {doc.analysis?.reasons && doc.analysis.reasons.length > 0 && (
+                                        <div className="mt-2">
+                                          <p className="text-sm font-semibold mb-1">Reasons:</p>
+                                          <ul className="list-disc list-inside text-sm space-y-1">
+                                            {doc.analysis.reasons.map((reason: string, i: number) => (
+                                              <li key={i} className="text-gray-700">{reason}</li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )}
+                                    </div>
+                                    
+                                    <div className="bg-white p-4 rounded border border-gray-300">
+                                      <h4 className="font-semibold text-gray-700 mb-2">📊 Session Stats</h4>
+                                      <div className="grid grid-cols-2 gap-2 text-sm">
+                                        <div><strong>Total Edits:</strong> {doc.stats?.totalEditEvents || 0}</div>
+                                        <div><strong>Chars Inserted:</strong> {doc.stats?.charsInserted || 0}</div>
+                                        <div><strong>Chars Deleted:</strong> {doc.stats?.charsDeleted || 0}</div>
+                                        <div><strong>Paste Events:</strong> {doc.stats?.pasteEventsCount || 0}</div>
+                                        <div><strong>Focus Events:</strong> {doc.stats?.focusEventsCount || 0}</div>
+                                        <div>
+                                          <strong>Active Time:</strong>{' '}
+                                          {Math.round((doc.stats?.activeTimeMs || 0) / 60000)} min
+                                        </div>
+                                        <div>
+                                          <strong>Inactive Time:</strong>{' '}
+                                          {Math.round((doc.stats?.inactiveTimeMs || 0) / 60000)} min
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    <details className="bg-white p-4 rounded border border-gray-300">
+                                      <summary className="font-semibold text-gray-700 cursor-pointer">
+                                        📝 Raw JSON (Click to expand)
+                                      </summary>
+                                      <pre className="bg-gray-900 text-green-400 p-4 rounded overflow-auto text-xs mt-2">
+                                        {JSON.stringify(doc, null, 2)}
+                                      </pre>
+                                    </details>
+                                  </div>
+                                ) : (
+                                  <pre className="bg-gray-900 text-green-400 p-4 rounded overflow-auto text-sm">
+                                    {JSON.stringify(doc, null, 2)}
+                                  </pre>
+                                )}
                               </div>
                             ))}
                           </div>

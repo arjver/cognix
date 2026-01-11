@@ -19,13 +19,14 @@
         {
           "id": "keyllama",
           "title": "Keyllama",
-          "icon": "resources/icon.png"
+          "icon": "$(comment-discussion)"
         }
       ]
     },
     "views": {
       "keyllama": [
         {
+          "type": "webview",
           "id": "keyllamaChatSidebar",
           "name": "AI Chat"
         }
@@ -50,6 +51,11 @@
       {
         "command": "keyllama.openChat",
         "title": "Open Keyllama AI Chat"
+      },
+      {
+        "command": "keyllama.saveSession",
+        "title": "Save Session to Database",
+        "category": "Keyllama"
       }
     ]
   },

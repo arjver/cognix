@@ -1,20 +1,15 @@
 import * as vscode from 'vscode';
 import { TelemetryTracker, SessionStats } from './tracker';
 import { askUserDetails } from './user-info';
-import { MongoClient, ServerApiVersion, Db } from 'mongodb';
+import { ChatSidebarProvider } from './chat-sidebar';
+import { MongoClient, Db } from 'mongodb';
 import { HumanLikelihoodAnalysis } from './llm';
-
-const uri = "mongodb+srv://patrickliu_db_user:passworducsb@cluster0.yycduow.mongodb.net/?appName=Cluster0";
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
+import * as path from 'path';
+import * as fs from 'fs';
+import * as dotenv from 'dotenv';
 
 let tracker: TelemetryTracker;
+let chatProvider: ChatSidebarProvider;
 let storedUserDetails: { fullName: string; className: string } | undefined;
 
 /**
@@ -26,12 +21,28 @@ async function saveSessionToMongoDB(
     analysis: HumanLikelihoodAnalysis
 ): Promise<void> {
     try {
+        // Load environment variables
+        if (!process.env.MONGODB_URI) {
+            const envPath = path.join(__dirname, '..', '.env');
+            if (fs.existsSync(envPath)) {
+                dotenv.config({ path: envPath });
+            }
+        }
+
+        const uri = process.env.MONGODB_URI;
+        if (!uri) {
+            console.error('MONGODB_URI not found in environment');
+            return;
+        }
+
         // Connect to MongoDB
+        const client = new MongoClient(uri);
         await client.connect();
-        console.log("Connected to MongoDB!");
+        console.log("Connected to MongoDB for session save!");
 
         // Get the database
-        const db: Db = client.db("keyllama");
+        const dbName = process.env.MONGODB_DB_NAME || 'cognix';
+        const db: Db = client.db(dbName);
         const collection = db.collection("sessions");
 
         // Prepare the data to save
@@ -40,7 +51,6 @@ async function saveSessionToMongoDB(
                 fullName: userDetails?.fullName || 'Anonymous',
                 className: userDetails?.className || 'Unknown',
             },
-
             stats: {
                 startTime: stats.startTime,
                 lastEventTime: stats.lastEventTime,
@@ -63,35 +73,33 @@ async function saveSessionToMongoDB(
         const result = await collection.insertOne(sessionData);
         console.log(`Session saved to MongoDB with ID: ${result.insertedId}`);
 
-    } catch (error) {
-        console.error("Error saving to MongoDB:", error);
-    } finally {
-        // Close the connection
         await client.close();
+    } catch (error) {
+        console.error("Error saving session to MongoDB:", error);
     }
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-    // Get session info
-    const userDetails = await askUserDetails();
-    storedUserDetails = userDetails || undefined;  // Store it for later use
+    // Register the chat sidebar provider FIRST
+    chatProvider = new ChatSidebarProvider(context.extensionUri);
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider(
+            ChatSidebarProvider.viewType,
+            chatProvider
+        )
+    );
 
-    if (!userDetails) {
-        console.log("User canceled input");
-    } else {
-        console.log(userDetails.fullName, userDetails.className);
-    }
-
+    // Initialize tracker
     tracker = new TelemetryTracker();
 
+    // Register document change listener
     context.subscriptions.push(
-        vscode.workspace.onDidChangeTextDocument((e) => {
-            for (const change of e.contentChanges) {
-                tracker.recordChange(change);
-            }
+        vscode.workspace.onDidChangeTextDocument(e => {
+            e.contentChanges.forEach(change => tracker.recordChange(change));
         })
     );
 
+    // Register showStats command
     context.subscriptions.push(
         vscode.commands.registerCommand('keyllama.showStats', async () => {
             if (!tracker) { return; }
@@ -105,9 +113,36 @@ export async function activate(context: vscode.ExtensionContext) {
             );
         })
     );
+
+    // Register manual session save command for testing
+    context.subscriptions.push(
+        vscode.commands.registerCommand('keyllama.saveSession', async () => {
+            if (!tracker) { return; }
+
+            const stats = tracker.getSessionStats();
+            const analysis = await tracker.analyzeWithLLM();
+            await saveSessionToMongoDB(storedUserDetails, stats, analysis);
+            
+            vscode.window.showInformationMessage('Session saved to database!');
+        })
+    );
+
+    // Handle user details (non-blocking)
+    askUserDetails().then(userDetails => {
+        storedUserDetails = userDetails || undefined;
+        if (userDetails) {
+            console.log("User:", userDetails.fullName, "Course:", userDetails.className);
+            // Set the class name in the chat provider
+            chatProvider.setClassName(userDetails.className);
+        }
+    }).catch(err => {
+        console.error("User details error:", err);
+    });
 }
 
 export async function deactivate() {
+    const { closeMongoClient } = await import('./db.js');
+    
     if (tracker) {
         try {
             const stats = tracker.getSessionStats();
@@ -140,4 +175,7 @@ export async function deactivate() {
             console.error('Failed to get final LLM analysis:', err);
         }
     }
+    
+    // Close MongoDB connection
+    await closeMongoClient();
 }
