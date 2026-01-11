@@ -1,41 +1,61 @@
-// src/extension.ts
 import * as vscode from 'vscode';
+import { TelemetryTracker } from './tracker';
 
-/**
- * Called when the extension is activated.
- * Sets up automatic notifications for typing activity.
- */
+let tracker: TelemetryTracker;
+
 export function activate(context: vscode.ExtensionContext) {
+    tracker = new TelemetryTracker();
 
-  console.log('KeyLogger extension is now active!');
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeTextDocument((e) => {
+            for (const change of e.contentChanges) {
+                tracker.recordChange(change);
+            }
+        })
+    );
 
-  // Listen for all text changes in any document
-  const disposable = vscode.workspace.onDidChangeTextDocument(event => {
+    context.subscriptions.push(
+        vscode.commands.registerCommand('keyllama.showStats', async () => {
+            if (!tracker) { return; }
 
-    // Loop through all changes in this event (can be multiple per typing event)
-    for (const change of event.contentChanges) {
+            const stats = tracker.getSessionStats();
+            const analysis = await tracker.analyzeWithLLM();
 
-      // Show a popup if text was inserted
-      if (change.text.length > 0) {
-        vscode.window.showInformationMessage(`Inserted: "${change.text}"`);
-      }
-
-      // Show a popup if text was deleted
-      if (change.rangeLength > 0) {
-        vscode.window.showInformationMessage(`Deleted ${change.rangeLength} character(s)`);
-      }
-
-    }
-
-  });
-
-  // Register the listener for cleanup on deactivation
-  context.subscriptions.push(disposable);
+            vscode.window.showInformationMessage(
+                `Human Likelihood: ${analysis.score}%\n` +
+                `Reasons:\n• ${analysis.reasons.join('\n• ')}`
+            );
+        })
+    );
 }
 
-/**
- * Called when the extension is deactivated.
- */
-export function deactivate() {
-  console.log('KeyLogger extension is now deactivated.');
+export async function deactivate() {
+    if (tracker) {
+        try {
+            const stats = tracker.getSessionStats();
+            const analysis = await tracker.analyzeWithLLM();
+
+            console.log('═══════════════════════════════════════════════════════════');
+            console.log('📊 Keyllama Final Human Likelihood Summary (LLM)');
+            console.log('═══════════════════════════════════════════════════════════');
+            console.log(`Human Likelihood Score: ${analysis.score}/100`);
+            console.log('Reasons:');
+            analysis.reasons.forEach((reason, i) => {
+                console.log(`  ${i + 1}. ${reason}`);
+            });
+            console.log('');
+            console.log('Session Metrics:');
+            console.log(`  Total Edits: ${stats.totalEditEvents}`);
+            console.log(`  Characters Inserted: ${stats.charsInserted}`);
+            console.log(`  Characters Deleted: ${stats.charsDeleted}`);
+            console.log(`  Paste Events: ${stats.pasteEvents.length}`);
+            console.log(`  External Paste Events: ${stats.pasteEvents.filter((p) => p.external).length}`);
+            console.log(`  Focus Events: ${stats.focusEvents.length}`);
+            console.log(`  Active Time: ${Math.round(stats.activeTimeMs / 60000)} minutes`);
+            console.log(`  Inactive Time: ${Math.round(stats.inactiveTimeMs / 60000)} minutes`);
+            console.log('═══════════════════════════════════════════════════════════');
+        } catch (err) {
+            console.error('Failed to get final LLM analysis:', err);
+        }
+    }
 }
