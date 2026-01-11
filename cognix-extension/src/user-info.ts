@@ -3,8 +3,8 @@ import * as vscode from 'vscode';
 export async function askUserDetails() {
     // Ask for full name
     const fullName = await vscode.window.showInputBox({
-        prompt: "Enter your full name",
-        placeHolder: "John Doe",
+        prompt: "Enter your full name.",
+        placeHolder: "First Last",
         ignoreFocusOut: true
     });
 
@@ -15,7 +15,7 @@ export async function askUserDetails() {
 
     // Ask for class
     const className = await vscode.window.showInputBox({
-        prompt: "Enter your class",
+        prompt: "Enter your class code.",
         placeHolder: "CS24",
         ignoreFocusOut: true
     });

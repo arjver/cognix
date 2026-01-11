@@ -1,0 +1,16 @@
+{"location":"extension.ts:8","message":"activate called","data":{"timestamp":1768113771959},"timestamp":1768113771959,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1"}
+{"location":"extension.ts:10","message":"calling askUserDetails","data":{"timestamp":1768113771959},"timestamp":1768113771959,"sessionId":"debug-session","runId":"run1","hypothesisId":"H5"}
+{"location":"extension.ts:14","message":"askUserDetails completed","data":{"hasUserDetails":true,"timestamp":1768113774431},"timestamp":1768113774431,"sessionId":"debug-session","runId":"run1","hypothesisId":"H5"}
+{"location":"extension.ts:26","message":"calling registerChatSidebar","data":{"timestamp":1768113774432},"timestamp":1768113774432,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"chat-sidebar.ts:44","message":"registerChatSidebar called","data":{"viewType":"keyllamaChatSidebar","timestamp":1768113774433},"timestamp":1768113774433,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"chat-sidebar.ts:48","message":"calling registerWebviewViewProvider","data":{"viewType":"keyllamaChatSidebar","timestamp":1768113774433},"timestamp":1768113774433,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"chat-sidebar.ts:51","message":"registerWebviewViewProvider completed","data":{"hasRegistration":true,"timestamp":1768113774433},"timestamp":1768113774433,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"extension.ts:29","message":"registerChatSidebar completed","data":{"timestamp":1768113774434},"timestamp":1768113774434,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"extension.ts:8","message":"activate called","data":{"timestamp":1768113994915},"timestamp":1768113994915,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1"}
+{"location":"extension.ts:10","message":"calling askUserDetails","data":{"timestamp":1768113994915},"timestamp":1768113994915,"sessionId":"debug-session","runId":"run1","hypothesisId":"H5"}
+{"location":"extension.ts:14","message":"askUserDetails completed","data":{"hasUserDetails":true,"timestamp":1768114023866},"timestamp":1768114023866,"sessionId":"debug-session","runId":"run1","hypothesisId":"H5"}
+{"location":"extension.ts:26","message":"calling registerChatSidebar","data":{"timestamp":1768114023867},"timestamp":1768114023867,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"chat-sidebar.ts:44","message":"registerChatSidebar called","data":{"viewType":"keyllamaChatSidebar","timestamp":1768114023867},"timestamp":1768114023867,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"chat-sidebar.ts:48","message":"calling registerWebviewViewProvider","data":{"viewType":"keyllamaChatSidebar","timestamp":1768114023868},"timestamp":1768114023868,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"chat-sidebar.ts:51","message":"registerWebviewViewProvider completed","data":{"hasRegistration":true,"timestamp":1768114023869},"timestamp":1768114023869,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
+{"location":"extension.ts:29","message":"registerChatSidebar completed","data":{"timestamp":1768114023869},"timestamp":1768114023869,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2"}
