@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { connectToOpenRouter } from './llm';
+import { connectToGemini } from './llm';
 import { getClassSystemPrompt } from './db';
 
 export class ChatSidebarProvider implements vscode.WebviewViewProvider {
@@ -70,7 +70,7 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
                 .join('\n\n');
 
             // Call the AI
-            const aiResponse = await connectToOpenRouter(fullPrompt);
+            const aiResponse = await connectToGemini(fullPrompt);
 
             // Add AI response to history
             this._conversationHistory.push({ role: 'assistant', content: aiResponse });
