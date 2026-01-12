@@ -25,7 +25,7 @@ CogNix consists of two main components:
 
 ## Award
 
-🏆 Winner of SBHacks Education Track 2026!
+🏆 Winner of SB Hacks Education Track 2026!
 
 ---
 
