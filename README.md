@@ -8,7 +8,7 @@ An AI-assisted learning platform that helps educators understand how students us
 
 <img width="30%" height="865" alt="Screenshot 2026-01-13 at 3 49 22 PM" src="https://github.com/user-attachments/assets/11f067b3-0b80-406f-8730-7eb40d1e98c4" />
 
-
+🏆 Winner of SB Hacks Education Track 2026!
 
 ## Overview
 
@@ -30,10 +30,6 @@ CogNix consists of two main components:
 - **Web**: Next.js, React, TypeScript, TailwindCSS
 - **DB**: MongoDB
 - **AI**: Google Gemini API
-
-## Award
-
-🏆 Winner of SB Hacks Education Track 2026!
 
 ---
 
