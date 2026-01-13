@@ -2,13 +2,14 @@
 
 An AI-assisted learning platform that helps educators understand how students use AI in their coding workflow. CogNix provides instructors with tools to configure AI assistance boundaries and monitor student coding patterns to ensure meaningful learning experiences.
 
-<img width="30%" height="982" alt="Screenshot 2026-01-13 at 3 23 30 PM" src="https://github.com/user-attachments/assets/ce3e5675-74a4-40a4-89cc-6c18180f9adb" />
+🏆 Winner of SB Hacks 2026 Education Track!
 
-<img width="30%" height="982" alt="Screenshot 2026-01-13 at 3 22 16 PM" src="https://github.com/user-attachments/assets/945499c4-0e3e-4c94-87be-40a0a52f8eb1" />
+<img width="30%"  alt="Screenshot 2026-01-13 at 3 23 30 PM" src="https://github.com/user-attachments/assets/ce3e5675-74a4-40a4-89cc-6c18180f9adb" />
 
-<img width="30%" height="865" alt="Screenshot 2026-01-13 at 3 49 22 PM" src="https://github.com/user-attachments/assets/11f067b3-0b80-406f-8730-7eb40d1e98c4" />
+<img width="30%"  alt="Screenshot 2026-01-13 at 3 22 16 PM" src="https://github.com/user-attachments/assets/945499c4-0e3e-4c94-87be-40a0a52f8eb1" />
 
-🏆 Winner of SB Hacks Education Track 2026!
+<img width="28%" alt="Screenshot 2026-01-13 at 3 49 22 PM" src="https://github.com/user-attachments/assets/11f067b3-0b80-406f-8730-7eb40d1e98c4" />
+
 
 ## Overview
 
